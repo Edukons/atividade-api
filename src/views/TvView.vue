@@ -8,15 +8,39 @@ onMounted(async () => {
   const response = await api.get('genre/tv/list?language=pt-BR')
   genres.value = response.data.genres
 })
+const tv = ref([]);
+
+const listTV = async (genreId) => {
+    const response = await api.get('discover/tv', {
+        params: {
+            with_genres: genreId,
+            language: 'pt-BR'
+        }
+    });
+    tv.value = response.data.results
+};
 </script>
 
 <template>
-  <h1>Programas de TV</h1>
+  <h1>Filmes</h1>
   <ul class="genre-list">
-    <li v-for="genre in genres" :key="genre.id" class="genre-item">
+    <li v-for="genre in genres" :key="genre.id" @click="listTV(genre.id)" class="genre-item">
         {{ genre.name }}
     </li>
   </ul>
+  <div class="TV-list">
+  <div v-for="tv in tv" :key="tv.id" class="TV-card">
+    
+    <img :src="`https://image.tmdb.org/t/p/w500${tv.poster_path}`" :alt="tv.name" />
+    <div class="TV-details">
+      <p class="TV-title">{{ tv.name }}</p>
+      <p class="TV-release-date">{{ tv.release_date }}</p>
+      <p class="TV-genres">{{ tv.genre_ids }}</p>
+    </div>
+    
+  </div>
+</div>
+ 
 </template>
 
 <style scoped>
@@ -25,23 +49,52 @@ onMounted(async () => {
   justify-content: center;
   flex-wrap: wrap;
   gap: 2rem;
+  
   list-style: none;
-  padding: 0;
+  margin-bottom: 2rem;
 }
 
 .genre-item {
-  background-color: #5d6424;
+  background-color: #387250;
   border-radius: 1rem;
   padding: 0.5rem 1rem;
-  align-self: center;
   color: #fff;
-  display: flex;
-  justify-content: center;
 }
 
 .genre-item:hover {
   cursor: pointer;
-  background-color: #7d8a2e;
-  box-shadow: 0 0 0.5rem #5d6424;
+  background-color: #4e9e5f;
+  box-shadow: 0 0 0.5rem #387250;
+}
+.TV-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.TV-card {
+  width: 15rem;
+  height: 30rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 0 0.5rem #000;
+}
+
+.TV-card img {
+  width: 100%;
+  height: 20rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 0.5rem #000;
+}
+
+.TV-details {
+  padding: 0 0.5rem;
+}
+
+.TV-title {
+  font-size: 1.1rem;
+  font-weight: bold;
+  line-height: 1.3rem;
+  height: 3.2rem;
 }
 </style>
