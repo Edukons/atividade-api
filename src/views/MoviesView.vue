@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import api from '@/plugins/axios'
 import Loading from 'vue-loading-overlay'
-import genreStore from '@/stores/genre'
+import genreStore from '@/store/genre'
 
 const isLoading = ref(false);
 const movies = ref([]);
@@ -10,14 +10,15 @@ const formatDate = (date) => new Date(date).toLocaleDateString('pt-BR')
 
 
 const listMovies = async (genreId) => {
+  genreStore.setCurrentGenreId(genreId);
   isLoading.value = true;
   const response = await api.get('discover/movie', {
     params: {
       with_genres: genreId,
-      language: 'pt-BR'
-    }
+      language: 'pt-BR',
+    },
   });
-  movies.value = response.data.results
+  movies.value = response.data.results;
   isLoading.value = false;
 };
 
@@ -34,15 +35,14 @@ onMounted(async () => {
   <ul class="genre-list">
     <loading v-model:active="isLoading" is-full-page />
     <li
-      v-for="genre in genreStore.genres"
-      :key="genre.id"
-      @click="listMovies(genre.id)"
-      class="genre-item"
-    >
-    
-      {{ genre.name }}
-    
-    </li>
+    v-for="genre in genreStore.genres"
+    :key="genre.id"
+    @click="listMovies(genre.id)"
+    class="genre-item"
+    :class="{ active: genre.id === genreStore.currentGenreId }"
+  >
+    {{  genre.name }}
+  </li>
   </ul>
   
   <div class="movie-list">
@@ -65,6 +65,16 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+.active {
+  background-color: #67b086;
+  font-weight: bolder;
+}
+
+.movie-genres span.active {
+  background-color: #abc322;
+  color: #000;
+  font-weight: bolder;
+}
 .genre-list {
   display: flex;
   justify-content: center;
