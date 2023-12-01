@@ -55,7 +55,7 @@ const listTV = async (genreId) => {
 }
 
 .genre-item {
-  background-color: #387250;
+  background-color: #ee6d03;
   border-radius: 1rem;
   padding: 0.5rem 1rem;
   color: #fff;
@@ -63,8 +63,8 @@ const listTV = async (genreId) => {
 
 .genre-item:hover {
   cursor: pointer;
-  background-color: #4e9e5f;
-  box-shadow: 0 0 0.5rem #387250;
+  background-color: #ee6d03a8;
+  box-shadow: 0 0 0.5rem #ee6d03;
 }
 .TV-list {
   display: flex;

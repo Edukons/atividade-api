@@ -3,11 +3,16 @@ import { ref, onMounted } from 'vue'
 import api from '@/plugins/axios'
 import Loading from 'vue-loading-overlay'
 import genreStore from '@/store/genre'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const isLoading = ref(false);
 const movies = ref([]);
 const formatDate = (date) => new Date(date).toLocaleDateString('pt-BR')
 
+function openMovie(movieId) {
+  router.push({ name: 'MovieDetails', params: { movieId } });
+}
 
 const listMovies = async (genreId) => {
   genreStore.setCurrentGenreId(genreId);
@@ -30,7 +35,7 @@ onMounted(async () => {
 
 </script>
 
-<template>
+<template >
   <h1>Filmes</h1>
   <ul class="genre-list">
     <loading v-model:active="isLoading" is-full-page />
@@ -48,7 +53,10 @@ onMounted(async () => {
   <div class="movie-list">
   <div v-for="movie in movies" :key="movie.id" class="movie-card">
     
-    <img :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`" :alt="movie.title" />
+    <img
+  :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`"
+  :alt="movie.title"
+  @click="openMovie(movie.id)"/>
     <div class="movie-details">
       <p class="movie-title">{{ movie.title }}</p>
       <p class="movie-release-date">{{ formatDate(movie.release_date) }}</p>
@@ -65,13 +73,19 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+.movie-release-date{
+  text-align: center;
+}
+.backPreto{
+  background-color: #000;
+}
 .active {
-  background-color: #67b086;
+  background-color: #000000;
   font-weight: bolder;
 }
 
 .movie-genres span.active {
-  background-color: #abc322;
+  background-color: #c32258;
   color: #000;
   font-weight: bolder;
 }
@@ -93,7 +107,7 @@ onMounted(async () => {
 
 .genre-item:hover {
   cursor: pointer;
-  background-color: #e7eb00;
+  background-color: #ffab66;
   box-shadow: 0 0 0.5rem #ee6d03;
 }
 .movie-list {
@@ -107,7 +121,9 @@ onMounted(async () => {
   height: 30rem;
   border-radius: 0.5rem;
   overflow: hidden;
-  box-shadow: 0 0 0.5rem #000;
+  box-shadow: 0 0 0.5rem #353131;
+  background-color: #000;
+  color: #fff;
 }
 
 .movie-card img {
@@ -137,17 +153,17 @@ onMounted(async () => {
 }
 
 .movie-genres span {
-  background-color: #e7eb00;
+  background-color: #ee6d03;
   border-radius: 0.5rem;
   padding: 0.2rem 0.5rem;
-  color: #fff;
+  color: #000000;
   font-size: 0.8rem;
   font-weight: bold;
 }
 
 .movie-genres span:hover {
   cursor: pointer;
-  background-color: #e7eb00;
-  box-shadow: 0 0 0.5rem #e7eb00;
+  background-color: #cc7a36;
+  box-shadow: 0 0 0.5rem #e7eb0010;
 }
 </style>
